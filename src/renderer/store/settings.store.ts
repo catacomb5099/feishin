@@ -554,6 +554,7 @@ export const GeneralSettingsSchema = z.object({
     musicBrainz: z.boolean(),
     nativeAspectRatio: z.boolean(),
     nativeSpotify: z.boolean(),
+    naviseerrUrl: z.string(),
     passwordStore: z.string().optional(),
     pathReplace: z.string(),
     pathReplaceWith: z.string(),
@@ -1379,6 +1380,7 @@ const initialState: SettingsState = {
         musicBrainz: true,
         nativeAspectRatio: false,
         nativeSpotify: false,
+        naviseerrUrl: '',
         passwordStore: undefined,
         pathReplace: '',
         pathReplaceWith: '',
@@ -3127,8 +3129,21 @@ export const useSidebarPlaylistSorting = () =>
 export const useSidebarPlaylistListFilterRegex = () =>
     useSettingsStore((state) => state.general.sidebarPlaylistListFilterRegex, shallow);
 
+// Not a stored sidebar item: it shows only while a Naviseerr address is set, and needs no store migration.
+const discoverItem: SidebarItemType = {
+    disabled: false,
+    id: 'Discover',
+    label: i18n.t('page.sidebar.discover'),
+    route: AppRoute.DISCOVER,
+};
+
 export const useSidebarItems = () =>
-    useSettingsStore((state) => state.general.sidebarItems, shallow);
+    useSettingsStore((state) => {
+        const items = state.general.sidebarItems;
+        if (!state.general.naviseerrUrl || isElectron()) return items;
+        const home = items.findIndex((item) => item.id === 'Home');
+        return [...items.slice(0, home + 1), discoverItem, ...items.slice(home + 1)];
+    }, shallow);
 
 export const usePlayerItems = () => useSettingsStore((state) => state.general.playerItems, shallow);
 

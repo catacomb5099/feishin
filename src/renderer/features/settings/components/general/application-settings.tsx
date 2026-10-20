@@ -33,6 +33,7 @@ import { SegmentedControl } from '/@/shared/components/segmented-control/segment
 import { Select } from '/@/shared/components/select/select';
 import { Slider } from '/@/shared/components/slider/slider';
 import { Switch } from '/@/shared/components/switch/switch';
+import { TextInput } from '/@/shared/components/text-input/text-input';
 import { toast } from '/@/shared/components/toast/toast';
 import { FontType } from '/@/shared/types/types';
 
@@ -249,6 +250,26 @@ export const ApplicationSettings = memo(() => {
             }),
             isHidden: false,
             title: t('setting.language'),
+        },
+        {
+            control: (
+                <TextInput
+                    defaultValue={settings.naviseerrUrl}
+                    onBlur={(e) => {
+                        setSettings({
+                            general: {
+                                naviseerrUrl: e.currentTarget.value.trim(),
+                            },
+                        });
+                    }}
+                    placeholder="https://naviseerr.example.com"
+                />
+            ),
+            description: t('setting.naviseerrUrl', {
+                context: 'description',
+            }),
+            isHidden: isElectron(),
+            title: t('setting.naviseerrUrl'),
         },
         {
             control: (

@@ -33,6 +33,7 @@ These variables override app settings **on first run** when no persisted setting
 | `general.listenBrainz` | `true` | `FS_GENERAL_LISTEN_BRAINZ` | `true` / `false` — ListenBrainz links. |
 | `general.musicBrainz` | `true` | `FS_GENERAL_MUSIC_BRAINZ` | `true` / `false` — MusicBrainz links. |
 | `general.nativeAspectRatio` | `false` | `FS_GENERAL_NATIVE_ASPECT_RATIO` | `true` / `false` — Use native cover art aspect ratio. |
+| `general.naviseerrUrl` | *(empty)* | `FS_GENERAL_NAVISEERR_URL` | Address of a Naviseerr web app (e.g. `https://naviseerr.example.com`). Set = a Discover page in the sidebar shows it. That Naviseerr must allow this Feishin's address to frame it. |
 | `general.pathReplace` | *(empty)* | `FS_GENERAL_PATH_REPLACE` | Path pattern to replace (e.g. server path in Docker). |
 | `general.pathReplaceWith` | *(empty)* | `FS_GENERAL_PATH_REPLACE_WITH` | Replacement path. |
 | `general.playerbarOpenDrawer` | `false` | `FS_GENERAL_PLAYERBAR_OPEN_DRAWER` | `true` / `false` — Open queue/lyrics as drawer from player bar. |

@@ -41,6 +41,7 @@ declare global {
         FS_GENERAL_LASTFM_API_KEY?: string;
         FS_GENERAL_MUSIC_BRAINZ?: string;
         FS_GENERAL_NATIVE_ASPECT_RATIO?: string;
+        FS_GENERAL_NAVISEERR_URL?: string;
         FS_GENERAL_PATH_REPLACE?: string;
         FS_GENERAL_PATH_REPLACE_WITH?: string;
         FS_GENERAL_PLAYERBAR_OPEN_DRAWER?: string;
