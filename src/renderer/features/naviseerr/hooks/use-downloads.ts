@@ -124,6 +124,26 @@ const remember = (download: ActiveDownload) => {
     return download;
 };
 
+/** Cancel or retry a whole download (Retry restarts every song without a file). */
+export const useDownloadAction = () => (download: ActiveDownload, action: 'cancel' | 'retry') =>
+    nvsRequest<ActiveDownload>(`/downloads/${download.downloadId}/${action}`, { method: 'POST' })
+        .catch((error) => {
+            // 409 = nothing left to cancel or retry; the body is the current card.
+            if (error.status === 409 && error.body?.downloadId) return error.body as ActiveDownload;
+            throw error;
+        })
+        .then(remember, fail);
+
+/** A finished download whose files were deleted: ask again past the "already in your library" check. */
+export const downloadAgain = (download: ActiveDownload) => {
+    const id = encodeURIComponent(download.youtubeId);
+    const path =
+        download.downloadType === 'SONG'
+            ? `/download/song/${id}?force=true`
+            : `/download/collection/${id}?type=${download.downloadType}&force=true`;
+    return nvsRequest<ActiveDownload>(path, { method: 'POST' }).then(remember, fail);
+};
+
 const fail = (error: unknown): never => {
     toast.error({ message: (error as Error).message });
     throw error;

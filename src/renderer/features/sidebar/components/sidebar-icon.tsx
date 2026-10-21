@@ -1,6 +1,8 @@
 import {
     RiAlbumFill,
     RiAlbumLine,
+    RiDownloadFill,
+    RiDownloadLine,
     RiFlag2Fill,
     RiFlag2Line,
     RiFolder3Fill,
@@ -28,6 +30,7 @@ import { generatePath, useLocation } from 'react-router';
 
 import styles from './sidebar-icon.module.css';
 
+import { NAVISEERR_DOWNLOADS_ROUTE } from '/@/renderer/features/naviseerr/sidebar';
 import { AppRoute } from '/@/renderer/router/routes';
 import { LibraryItem } from '/@/shared/types/domain-types';
 
@@ -78,6 +81,9 @@ export const SidebarIcon = ({ active, route, size }: SidebarIconProps) => {
             case generatePath(AppRoute.SEARCH, { itemType: LibraryItem.SONG }):
                 if (isActive) return <RiSearchFill size={size} />;
                 return <RiSearchLine size={size} />;
+            case NAVISEERR_DOWNLOADS_ROUTE:
+                if (isActive) return <RiDownloadFill size={size} />;
+                return <RiDownloadLine size={size} />;
             default:
                 if (route.startsWith(AppRoute.FAVORITES)) {
                     if (isActive) return <RiHeartFill size={size} />;

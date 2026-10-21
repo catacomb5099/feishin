@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { HashRouter, Route, Routes } from 'react-router';
 
-import { withRemote } from '/@/renderer/features/naviseerr';
+import { NaviseerrRoutes, withRemote } from '/@/renderer/features/naviseerr';
 import { ShuffleAllContextModal } from '/@/renderer/features/player/components/shuffle-all-modal';
 import { SettingsContextModal } from '/@/renderer/features/settings/components/settings-modal';
 import { RouterErrorBoundary } from '/@/renderer/features/shared/components/router-error-boundary';
@@ -341,6 +341,7 @@ export const AppRouter = () => {
                                                 />
                                             </Route>
                                         </Route>
+                                        <Route element={<NaviseerrRoutes />} path="/naviseerr/*" />
                                         <Route element={<InvalidRoute />} path="*" />
                                     </Route>
                                 </Route>

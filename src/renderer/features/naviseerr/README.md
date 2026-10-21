@@ -22,10 +22,12 @@ the boundary of a future plugin.
 
 | # | Upstream file | Change |
 |---|---|---|
-| T1 | `router/app-router.tsx` | `withRemote(...)` around the album, artist (both artist paths) and playlist detail routes |
+| T1 | `router/app-router.tsx` | `withRemote(...)` around the album, artist (both artist paths) and playlist detail routes; one `<Route path="/naviseerr/*">` for the module's own pages (Downloads) |
 | T2 | `features/search/components/command-palette.tsx` | one `NaviseerrSearchSection` ("Not in your library") after the songs section |
 | T3 | `features/search/components/search-header.tsx` | one `NaviseerrSearchTab` ("Discover") in the tab group; the list settings menu only on library tabs |
 | T4 | `features/search/components/search-content.tsx` | one `NaviseerrSearchResults` (renders only on the Discover tab) |
+| T8 | `store/settings.store.ts` | `useSidebarItems` appends one constant "Downloads" item while on (no stored item, no migration) |
+| T9 | `features/sidebar/components/sidebar-icon.tsx` | one `case` for the Downloads route |
 | T5 | `features/settings/components/general/general-tab.tsx` | one section entry `NaviseerrSettings` |
 | T6 | `settings.js.template` | `window.NAVISEERR_URL = "${NAVISEERR_URL}";` |
 
@@ -49,6 +51,9 @@ the boundary of a future plugin.
 - `components/remote-context-menu.tsx` the module's own right-click / "..." menu (Download, Add to playlist, Go to);
   Feishin's menus stay on library items. `hooks/use-playlist-additions.ts` asks the server to put a song into one of
   your playlists once it is downloaded, and tells you when it is in.
+- `sidebar.ts` the Downloads sidebar entry. T8 and T9 import it directly instead of `index.ts`, because the settings
+  store is imported by almost everything and going through `index.ts` would make an import cycle.
+- `routes/downloads-route.tsx` the Downloads page (Active / History), built like Feishin's Radio page.
 - `store/` the persisted switch and address (`store_naviseerr`).
 - `components/` the module's screens and parts.
 - `i18n/en.json` the strings, registered as the `naviseerr` namespace (Feishin's `en.json` is untouched).
