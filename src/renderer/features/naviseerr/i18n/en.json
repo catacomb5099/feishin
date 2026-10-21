@@ -49,5 +49,12 @@
         "albums": "Albums",
         "singles": "Singles and EPs",
         "about": "About"
+    },
+    "search": {
+        "section": "Not in your library",
+        "showAll": "Show all",
+        "tab": "Discover",
+        "empty": "Search for music you don't have yet.",
+        "downloading": "Downloading {{title}}."
     }
 }

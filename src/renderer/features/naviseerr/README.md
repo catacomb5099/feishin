@@ -23,6 +23,9 @@ the boundary of a future plugin.
 | # | Upstream file | Change |
 |---|---|---|
 | T1 | `router/app-router.tsx` | `withRemote(...)` around the album, artist (both artist paths) and playlist detail routes |
+| T2 | `features/search/components/command-palette.tsx` | one `NaviseerrSearchSection` ("Not in your library") after the songs section |
+| T3 | `features/search/components/search-header.tsx` | one `NaviseerrSearchTab` ("Discover") in the tab group; the list settings menu only on library tabs |
+| T4 | `features/search/components/search-content.tsx` | one `NaviseerrSearchResults` (renders only on the Discover tab) |
 | T5 | `features/settings/components/general/general-tab.tsx` | one section entry `NaviseerrSettings` |
 | T6 | `settings.js.template` | `window.NAVISEERR_URL = "${NAVISEERR_URL}";` |
 

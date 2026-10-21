@@ -9,6 +9,7 @@ import {
     AlbumArtistListView,
     OverrideAlbumArtistListQuery,
 } from '/@/renderer/features/artists/components/album-artist-list-content';
+import { NaviseerrSearchResults } from '/@/renderer/features/naviseerr';
 import { AnimatedPage } from '/@/renderer/features/shared/components/animated-page';
 import {
     OverrideSongListQuery,
@@ -34,6 +35,7 @@ export const SearchContent = () => {
                 {itemType === LibraryItem.ALBUM && <AlbumSearch />}
                 {itemType === LibraryItem.SONG && <SongSearch />}
                 {itemType === LibraryItem.ALBUM_ARTIST && <ArtistSearch />}
+                <NaviseerrSearchResults />
             </Suspense>
         </AnimatedPage>
     );

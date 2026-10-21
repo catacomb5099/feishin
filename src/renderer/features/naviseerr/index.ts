@@ -4,5 +4,10 @@ import en from '/@/renderer/features/naviseerr/i18n/en.json';
 
 i18n.addResourceBundle('en', 'naviseerr', en);
 
+export {
+    NaviseerrSearchResults,
+    NaviseerrSearchTab,
+} from '/@/renderer/features/naviseerr/components/naviseerr-search-results';
+export { NaviseerrSearchSection } from '/@/renderer/features/naviseerr/components/naviseerr-search-section';
 export { NaviseerrSettings } from '/@/renderer/features/naviseerr/components/naviseerr-settings';
 export { withRemote } from '/@/renderer/features/naviseerr/routes/with-remote';
