@@ -5,6 +5,8 @@ import { createCallable } from 'react-call';
 import { useTranslation } from 'react-i18next';
 import { generatePath, useNavigate } from 'react-router';
 
+import { api } from '/@/renderer/api';
+import { queryKeys } from '/@/renderer/api/query-keys';
 import { GoToAction } from '/@/renderer/features/context-menu/actions/go-to-action';
 import {
     fromNvsId,
@@ -123,6 +125,24 @@ const RemoteAddToPlaylist = ({ cmd }: { cmd: RemoteMenuCommand }) => {
     if (!mediaServer || !server) return null;
 
     const title = cmd.items.length === 1 ? cmd.items[0].name : '';
+    const name = searchTerm.trim();
+    const canCreate = !!name && !playlists.some((p) => p.name.toLowerCase() === name.toLowerCase());
+
+    // Spotify's "New playlist" inside Add to playlist: Feishin's own call on its server, then the same add.
+    const handleCreate = async () => {
+        try {
+            const created = await api.controller.createPlaylist({
+                apiClientProps: { serverId: server.id },
+                body: { name, public: false },
+            });
+            if (!created?.id) throw new Error(tf('error.genericError'));
+            queryClient.invalidateQueries({ queryKey: queryKeys.playlists.root(server.id) });
+            await handleAdd({ id: created.id, name } as Playlist);
+        } catch (error) {
+            toast.error({ message: (error as Error).message });
+        }
+    };
+
     const handleAdd = async (playlist: Playlist) => {
         try {
             const items = await downloadForPlaylist(cmd);
@@ -156,7 +176,7 @@ const RemoteAddToPlaylist = ({ cmd }: { cmd: RemoteMenuCommand }) => {
             onKeyDown={(e) => e.stopPropagation()}
             onPointerDown={(e) => e.stopPropagation()}
             pb="xs"
-            placeholder={tf('common.search')}
+            placeholder={t('playlist.searchOrName')}
             size="sm"
             value={searchTerm}
         />
@@ -179,7 +199,12 @@ const RemoteAddToPlaylist = ({ cmd }: { cmd: RemoteMenuCommand }) => {
                         <Spinner container />
                     </ContextMenu.Item>
                 )}
-                {!playlistsQuery.isLoading && shown.length === 0 && (
+                {canCreate && (
+                    <ContextMenu.Item leftIcon="add" onSelect={handleCreate}>
+                        {t('playlist.create', { name })}
+                    </ContextMenu.Item>
+                )}
+                {!playlistsQuery.isLoading && shown.length === 0 && !canCreate && (
                     <ContextMenu.Item disabled>{tf('common.noResultsFromQuery')}</ContextMenu.Item>
                 )}
                 {shown.map((playlist) => (
