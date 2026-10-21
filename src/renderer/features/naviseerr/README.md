@@ -22,6 +22,7 @@ the boundary of a future plugin.
 
 | # | Upstream file | Change |
 |---|---|---|
+| T1 | `router/app-router.tsx` | `withRemote(...)` around the album and playlist detail routes |
 | T5 | `features/settings/components/general/general-tab.tsx` | one section entry `NaviseerrSettings` |
 | T6 | `settings.js.template` | `window.NAVISEERR_URL = "${NAVISEERR_URL}";` |
 
@@ -30,6 +31,15 @@ the boundary of a future plugin.
 - `api/` the server's JSON shapes (`types.ts`), one fetch client (`naviseerr-client.ts`: finds the base address,
   sends the login cookie, turns errors into one sentence) and React Query options (`naviseerr-api.ts`, keys start
   with `['naviseerr', address]`).
+- `api/map.ts` turns YouTube Music items into Feishin's `Song` / `Album` / `AlbumArtist` / `Playlist` with ids
+  prefixed `nvs~`, so every Feishin card, title and artist link points at Feishin's own routes; `routes/with-remote.tsx`
+  shows the module's page for such an id. Self-check: run from the repo root
+
+  ```sh
+  node -e "const p=require('path'),e=require(require.resolve('esbuild',{paths:[p.dirname(require.resolve('vite'))]}));e.build({entryPoints:[process.argv[1]],bundle:true,platform:'node',write:false,logLevel:'error',plugins:[{name:'at',setup(b){b.onResolve({filter:/^\/@\//},a=>({path:p.resolve('src',a.path.slice(3))+'.ts'}))}}]}).then(r=>new Function('require',r.outputFiles[0].text)(require))" src/renderer/features/naviseerr/api/map.check.ts
+  ```
+
+- `hooks/use-downloads.ts` one poller of the server's download feed for the whole app (outside React).
 - `store/` the persisted switch and address (`store_naviseerr`).
 - `components/` the module's screens and parts.
 - `i18n/en.json` the strings, registered as the `naviseerr` namespace (Feishin's `en.json` is untouched).

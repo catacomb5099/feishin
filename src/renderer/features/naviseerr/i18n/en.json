@@ -15,5 +15,30 @@
     },
     "error": {
         "unreachable": "Can't reach the download server at {{address}}. Check the address, and that it lists this Feishin address."
+    },
+    "action": {
+        "download": "Download"
+    },
+    "header": {
+        "downloading": "Downloading...",
+        "downloadingCount": "Downloading {{done}} of {{total}}"
+    },
+    "row": {
+        "inLibrary": "In your library",
+        "tryAgain": "Click to try again."
+    },
+    "page": {
+        "notFound": "This isn't available on YouTube Music right now."
+    },
+    "failure": {
+        "NO_CANDIDATES": "No source found.",
+        "SOURCES_EXHAUSTED": "No source would send the file.",
+        "TIMED_OUT": "Timed out.",
+        "SEARCH_FAILED": "The search failed.",
+        "TRANSFER_NOT_FOUND": "The source dropped the transfer.",
+        "METADATA_UNAVAILABLE": "Couldn't find this on YouTube Music.",
+        "SOULSEEK_OFFLINE": "Not connected to Soulseek.",
+        "CANCELLED": "Cancelled.",
+        "unknown": "The download failed."
     }
 }
