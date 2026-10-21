@@ -21,7 +21,7 @@ export const matchSong = <T extends Pick<Song, 'artistName' | 'artists' | 'name'
         (song) =>
             !by ||
             [song.artistName, ...song.artists.map((a) => a.name)].some((name) =>
-                plain(name ?? '').includes(by),
+                ` ${plain(name ?? '')} `.includes(` ${by} `),
             ),
     );
     return (
