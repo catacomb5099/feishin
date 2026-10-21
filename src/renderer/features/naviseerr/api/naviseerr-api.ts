@@ -1,5 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
+import i18n from '/@/i18n/i18n';
 import { specialCollection } from '/@/renderer/features/naviseerr/api/map';
 import {
     NaviseerrError,
@@ -17,10 +18,12 @@ import {
     NvsRadio,
     NvsSearch,
     Session,
+    SongInfo,
     Status,
     SuggestedPlaylist,
     SuggestedPlaylistDetail,
 } from '/@/renderer/features/naviseerr/api/types';
+import { toast } from '/@/shared/components/toast/toast';
 
 // Keys start with 'naviseerr' and the address, never a Feishin serverId: it is another server.
 export const nvsKeys = {
@@ -155,10 +158,23 @@ export const naviseerrQueries = {
             queryKey: [...nvsKeys.root(address), 'session'],
             retry: false,
         }),
+    songInfo: (address: null | string, youtubeId: string) =>
+        queryOptions({
+            enabled: !!address,
+            queryFn: ({ signal }) =>
+                nvsRequest<SongInfo>(`/songs/${segment(youtubeId)}`, { signal }),
+            queryKey: [...nvsKeys.root(address), 'song', youtubeId],
+            retry: false,
+            staleTime: 60 * 60_000,
+        }),
     status: (address: null | string) =>
         queryOptions({
             enabled: !!address,
-            queryFn: ({ signal }) => nvsRequest<Status>('/status', { signal }),
+            queryFn: ({ signal }) =>
+                nvsRequest<Status>('/status', { signal }).then((status) => {
+                    warnOnce(status);
+                    return status;
+                }),
             queryKey: [...nvsKeys.root(address), 'status'],
             retry: false,
             staleTime: 60_000,
@@ -175,6 +191,20 @@ export const naviseerrQueries = {
             retry: false,
             staleTime: 60 * 60_000,
         }),
+};
+
+let warned = false;
+
+/** One warning per session when downloads cannot work right now (the server's own words where it has them). */
+const warnOnce = (status: Status) => {
+    const problem = !status.youtubeMusic.reachable
+        ? i18n.t('outage.youtubeMusic', { ns: 'naviseerr' })
+        : !status.soulseek.connected
+          ? i18n.t('outage.soulseek', { ns: 'naviseerr' })
+          : status.library.problem;
+    if (!problem || warned) return;
+    warned = true;
+    toast.warn({ message: problem });
 };
 
 /** 202 for a new download, 409 when it is already queued, running or in the library: both carry the download. */

@@ -186,6 +186,19 @@ export type NvsTrack = {
 
 export type Session = { authenticated?: boolean; mode: 'authentik' | 'open' };
 
+export type SongInfo = {
+    album: null | { id: null | string; name: string };
+    artists: { id: null | string; name: string }[];
+    credits: { names: string[]; role: string }[];
+    durationSeconds: null | number;
+    explicit: boolean | null;
+    iconURL: string;
+    id: string;
+    name: string;
+    plays: null | string;
+    year: null | number;
+};
+
 export type Status = {
     library: {
         enabled: boolean;

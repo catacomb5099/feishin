@@ -13,6 +13,7 @@ import {
     toNvsId,
 } from '/@/renderer/features/naviseerr/api/map';
 import { naviseerrQueries, startRadio } from '/@/renderer/features/naviseerr/api/naviseerr-api';
+import { openSongInfo } from '/@/renderer/features/naviseerr/components/song-info-modal';
 import {
     requestCollectionDownload,
     requestSongDownload,
@@ -238,6 +239,14 @@ const RemoteMenuContent = ({ cmd }: { cmd: RemoteMenuCommand }) => {
             {songs?.length === 1 && (
                 <ContextMenu.Item leftIcon="radio" onSelect={() => openRadio(songs[0])}>
                     {t('radio.start')}
+                </ContextMenu.Item>
+            )}
+            {songs?.length === 1 && (
+                <ContextMenu.Item
+                    leftIcon="info"
+                    onSelect={() => openSongInfo(songs[0]._nvs.youtubeId, songs[0].name)}
+                >
+                    {t('songInfo.heading')}
                 </ContextMenu.Item>
             )}
             {cmd.type !== LibraryItem.PLAYLIST && (
