@@ -17,7 +17,9 @@
         "unreachable": "Can't reach the download server at {{address}}. Check the address, and that it lists this Feishin address."
     },
     "action": {
-        "download": "Download"
+        "download": "Download",
+        "play": "Play",
+        "goToAlbum": "Go to album"
     },
     "header": {
         "downloading": "Downloading...",
@@ -56,5 +58,15 @@
         "tab": "Discover",
         "empty": "Search for music you don't have yet.",
         "downloading": "Downloading {{title}}."
+    },
+    "landing": {
+        "added": "Added to your library: {{title}}",
+        "partial": "Added to your library: {{title}} ({{failed}} songs could not be downloaded)",
+        "already": "Already in your library."
+    },
+    "play": {
+        "NOT_IN_LIBRARY": "This song isn't in your library yet.",
+        "NOT_FOUND_IN_MEDIA_SERVER": "The song is downloaded but your music server hasn't picked it up yet. Try again in a minute.",
+        "MEDIA_SERVER_NOT_CONNECTED": "The download server is not connected to this music server."
     }
 }

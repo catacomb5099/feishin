@@ -18,6 +18,7 @@ import {
     requestSongDownload,
     useActiveDownloads,
 } from '/@/renderer/features/naviseerr/hooks/use-downloads';
+import { usePlayFromLibrary } from '/@/renderer/features/naviseerr/hooks/use-library-state';
 import { useNaviseerrAddress } from '/@/renderer/features/naviseerr/store/naviseerr-store';
 import { ItemTableListColumnConfig, useSettingsStore } from '/@/renderer/store';
 import { LibraryItem } from '/@/shared/types/domain-types';
@@ -107,14 +108,18 @@ export const RemoteSongTable = ({ columns, onMore, songs }: RemoteSongTableProps
     const tableConfig = useSettingsStore((state) => state.lists[ItemListKey.ALBUM_DETAIL]?.table);
     const stateOf = useRowStates(songs);
 
+    const play = usePlayFromLibrary();
+
     const activate = useCallback(
         (song: RemoteSong) => {
             const state = stateOf(song);
             if (state.kind === 'download' || state.kind === 'failed') {
                 requestSongDownload(song._nvs.youtubeId).catch(() => {});
+            } else if (state.kind === 'done') {
+                play?.([song._nvs.youtubeId]);
             }
         },
-        [stateOf],
+        [play, stateOf],
     );
 
     const rows = useMemo(() => ({ activate, more: onMore, stateOf }), [activate, onMore, stateOf]);
