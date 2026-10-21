@@ -1,6 +1,9 @@
 import { ReactNode, useMemo } from 'react';
 
-import { GridCarousel } from '/@/renderer/components/grid-carousel/grid-carousel-v2';
+import {
+    GridCarousel,
+    useGridCarouselContainerQuery,
+} from '/@/renderer/components/grid-carousel/grid-carousel-v2';
 import { MemoizedItemCard } from '/@/renderer/components/item-card/item-card';
 import { useGridRows } from '/@/renderer/components/item-list/helpers/use-grid-rows';
 import { ItemControls } from '/@/renderer/components/item-list/types';
@@ -39,13 +42,22 @@ const LIST_KEYS = {
 } as const;
 
 interface RemoteCarouselProps {
+    containerQuery?: ReturnType<typeof useGridCarouselContainerQuery>;
     data: (Album | AlbumArtist | Playlist)[];
     itemType: keyof typeof LIST_KEYS;
+    // Home's shelves use Feishin's plain carousel title; detail pages the section title with a rule.
+    plainTitle?: boolean;
     title: ReactNode;
 }
 
 /** A shelf of Feishin cards for things you don't have: open on click, no Play on hover. */
-export const RemoteCarousel = ({ data, itemType, title }: RemoteCarouselProps) => {
+export const RemoteCarousel = ({
+    containerQuery,
+    data,
+    itemType,
+    plainTitle,
+    title,
+}: RemoteCarouselProps) => {
     const rows = useGridRows(itemType, LIST_KEYS[itemType]);
     const controls = useMemo((): ItemControls => {
         if (itemType === LibraryItem.ALBUM_ARTIST) return {};
@@ -87,10 +99,11 @@ export const RemoteCarousel = ({ data, itemType, title }: RemoteCarouselProps) =
     return (
         <GridCarousel
             cards={cards}
+            containerQuery={containerQuery}
             onNextPage={() => {}}
             onPrevPage={() => {}}
             rowCount={1}
-            title={<RemoteSectionTitle>{title}</RemoteSectionTitle>}
+            title={plainTitle ? title : <RemoteSectionTitle>{title}</RemoteSectionTitle>}
         />
     );
 };

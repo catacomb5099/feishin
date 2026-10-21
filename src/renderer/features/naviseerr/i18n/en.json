@@ -135,5 +135,10 @@
             "NO_RESULTS": "Soulseek found nothing. Try other words above.",
             "BEFORE_CACHE": "No list was kept for this song. Search again above."
         }
+    },
+    "home": {
+        "madeForYou": "Made for you",
+        "era": "Made for you: {{era}}",
+        "allTime": "All-time hits"
     }
 }

@@ -26,6 +26,7 @@ the boundary of a future plugin.
 | T2 | `features/search/components/command-palette.tsx` | one `NaviseerrSearchSection` ("Not in your library") after the songs section |
 | T3 | `features/search/components/search-header.tsx` | one `NaviseerrSearchTab` ("Discover") in the tab group; the list settings menu only on library tabs |
 | T4 | `features/search/components/search-content.tsx` | one `NaviseerrSearchResults` (renders only on the Discover tab) |
+| T7 | `features/home/routes/home-route.tsx` | one `NaviseerrHomeShelves` ("Made for you") under the featured carousel |
 | T8 | `store/settings.store.ts` | `useSidebarItems` appends one constant "Downloads" item while on (no stored item, no migration) |
 | T9 | `features/sidebar/components/sidebar-icon.tsx` | one `case` for the Downloads route |
 | T5 | `features/settings/components/general/general-tab.tsx` | one section entry `NaviseerrSettings` |

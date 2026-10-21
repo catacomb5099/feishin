@@ -8,6 +8,7 @@ import { AlbumInfiniteFeatureCarousel } from '/@/renderer/features/home/componen
 import { AlbumInfiniteSingleFeatureCarousel } from '/@/renderer/features/home/components/album-infinite-single-feature-carousel';
 import { FeaturedGenres } from '/@/renderer/features/home/components/featured-genres';
 import { PlaylistInfiniteCarousel } from '/@/renderer/features/home/components/playlist-infinite-carousel';
+import { NaviseerrHomeShelves } from '/@/renderer/features/naviseerr';
 import { AnimatedPage } from '/@/renderer/features/shared/components/animated-page';
 import { LibraryContainer } from '/@/renderer/features/shared/components/library-container';
 import { LibraryHeaderBar } from '/@/renderer/features/shared/components/library-header-bar';
@@ -124,6 +125,7 @@ const HomeRoute = () => {
                         {homeFeature && homeFeatureStyle === HomeFeatureStyle.MULTIPLE && (
                             <AlbumInfiniteFeatureCarousel />
                         )}
+                        <NaviseerrHomeShelves containerQuery={containerQuery} />
                         {sortedItems.map((item) => {
                             if (item.id === HomeItem.GENRES) {
                                 return <FeaturedGenres key="featured-genres" />;
