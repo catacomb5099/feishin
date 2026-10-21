@@ -15,6 +15,10 @@ import { Play } from '/@/shared/types/types';
 
 type PlayRequest = { artists?: string[]; id?: string; title?: string; type?: string };
 
+// Naviseerr opens YouTube Music after 1.5 s without an answer (ANSWER_WAIT_MS); stay under it so a
+// slow library search never plays here as well.
+const ANSWER_DEADLINE_MS = 1200;
+
 // Naviseerr (the web app that finds and downloads music) shown whole. `from` tells it where it is
 // shown, so its sign-in comes back here: the owner's proxy strips the referrer between sites.
 const DiscoverRoute = () => {
@@ -33,6 +37,7 @@ const DiscoverRoute = () => {
             if (event.origin !== origin || event.source !== frame.current?.contentWindow) return;
             const { artists, id, title, type } = event.data ?? {};
             if (type !== 'naviseerr:play' || !title) return;
+            const asked = Date.now();
             let song;
             try {
                 const found = await api.controller.search({
@@ -43,6 +48,7 @@ const DiscoverRoute = () => {
             } catch {
                 song = undefined;
             }
+            if (Date.now() - asked > ANSWER_DEADLINE_MS) song = undefined;
             if (song) player.addToQueueByData([song], Play.NOW);
             frame.current?.contentWindow?.postMessage(
                 { id, played: Boolean(song), type: 'naviseerr:played' },
