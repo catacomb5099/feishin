@@ -22,10 +22,19 @@ export const NVS_PREFIX = 'nvs~';
 
 export const toNvsId = (youtubeId: string) => NVS_PREFIX + youtubeId;
 
-// A suggested playlist ("Made for you") is a playlist page too: nvs~c~<curator category>.
+// Suggested playlists ("Made for you", nvs~c~<category>) and radios (nvs~r~<uuid>) are playlist pages too.
 export const CURATED_PREFIX = 'c~';
-export const curatedCategory = (id: string) =>
-    id.startsWith(CURATED_PREFIX) ? id.slice(CURATED_PREFIX.length) : null;
+export const RADIO_PREFIX = 'r~';
+
+/** What a playlist-page id downloads as on the server, when it is not a YouTube playlist. */
+export const specialCollection = (id: string) => {
+    if (id.startsWith(CURATED_PREFIX)) {
+        return { key: id.slice(CURATED_PREFIX.length), type: 'CURATED' as const };
+    }
+    if (id.startsWith(RADIO_PREFIX))
+        return { key: id.slice(RADIO_PREFIX.length), type: 'RADIO' as const };
+    return null;
+};
 export const isNvsId = (id?: null | string): id is string => !!id && id.startsWith(NVS_PREFIX);
 export const fromNvsId = (id: string) => (isNvsId(id) ? id.slice(NVS_PREFIX.length) : id);
 

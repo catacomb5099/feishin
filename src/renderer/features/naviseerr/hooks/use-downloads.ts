@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 import i18n from '/@/i18n/i18n';
 import { queryKeys } from '/@/renderer/api/query-keys';
-import { curatedCategory } from '/@/renderer/features/naviseerr/api/map';
+import { specialCollection } from '/@/renderer/features/naviseerr/api/map';
 import {
     downloadCollection,
     downloadSong,
@@ -104,8 +104,8 @@ export const findDownload = (
     youtubeId: string,
     type: DownloadType,
 ) => {
-    const category = curatedCategory(youtubeId);
-    const [id, kind] = category ? [category, 'CURATED'] : [youtubeId, type];
+    const special = specialCollection(youtubeId);
+    const [id, kind] = special ? [special.key, special.type] : [youtubeId, type];
     const matches = (downloads ?? []).filter(
         (download) => download.youtubeId === id && download.downloadType === kind,
     );

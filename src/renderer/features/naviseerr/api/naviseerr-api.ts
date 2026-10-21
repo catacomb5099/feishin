@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { curatedCategory } from '/@/renderer/features/naviseerr/api/map';
+import { specialCollection } from '/@/renderer/features/naviseerr/api/map';
 import {
     NaviseerrError,
     nvsRequest,
@@ -14,6 +14,7 @@ import {
     LibrarySongState,
     NvsArtistPage,
     NvsCollection,
+    NvsRadio,
     NvsSearch,
     Session,
     Status,
@@ -71,15 +72,21 @@ export const naviseerrQueries = {
         queryOptions({
             enabled: !!address,
             queryFn: ({ signal }) => {
-                const category = curatedCategory(id);
-                return category
-                    ? nvsRequest<SuggestedPlaylistDetail>(
-                          `/suggested-playlists/${segment(category)}`,
-                          { signal },
-                      ).then((detail) => fromSuggested(id, detail))
-                    : nvsRequest<NvsCollection>(`/collections/${segment(id)}?type=${type}`, {
-                          signal,
-                      });
+                const special = specialCollection(id);
+                if (special?.type === 'CURATED') {
+                    return nvsRequest<SuggestedPlaylistDetail>(
+                        `/suggested-playlists/${segment(special.key)}`,
+                        { signal },
+                    ).then((detail) => fromSuggested(id, detail));
+                }
+                if (special?.type === 'RADIO') {
+                    return nvsRequest<NvsRadio>(`/radios/${segment(special.key)}`, { signal }).then(
+                        (radio) => fromRadio(id, radio),
+                    );
+                }
+                return nvsRequest<NvsCollection>(`/collections/${segment(id)}?type=${type}`, {
+                    signal,
+                });
             },
             queryKey: [...nvsKeys.root(address), 'collection', type, id],
             retry: false,
@@ -174,13 +181,31 @@ export const downloadSong = (youtubeId: string) =>
     requestDownload(`/download/song/${segment(youtubeId)}`);
 
 export const downloadCollection = (id: string, type: 'ALBUM' | 'PLAYLIST') => {
-    const category = curatedCategory(id);
+    const special = specialCollection(id);
     return requestDownload(
-        category
-            ? `/download/collection/${segment(category)}?type=CURATED`
+        special
+            ? `/download/collection/${segment(special.key)}?type=${special.type}`
             : `/download/collection/${segment(id)}?type=${type}`,
     );
 };
+
+/** Start a radio from a song: the server saves it, because YouTube reshuffles radios within minutes. */
+export const startRadio = (seed: string) =>
+    nvsRequest<NvsRadio>(`/radios?seed=${segment(seed)}`, { method: 'POST' });
+
+const fromRadio = (id: string, radio: NvsRadio): NvsCollection => ({
+    artistIds: [],
+    artists: radio.artists,
+    iconURL: radio.iconURL,
+    id,
+    name: radio.name,
+    playlistId: null,
+    trackCount: radio.trackCount,
+    tracks: radio.tracks,
+    type: 'PLAYLIST',
+    views: null,
+    year: null,
+});
 
 /** A suggested playlist in the shape of a YouTube playlist page. */
 const fromSuggested = (id: string, detail: SuggestedPlaylistDetail): NvsCollection => ({

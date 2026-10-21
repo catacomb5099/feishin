@@ -5,7 +5,7 @@ import { generatePath, useNavigate } from 'react-router';
 
 import { ItemImage } from '/@/renderer/components/item-image/item-image';
 import { PageHeader } from '/@/renderer/components/page-header/page-header';
-import { CURATED_PREFIX, toNvsId } from '/@/renderer/features/naviseerr/api/map';
+import { CURATED_PREFIX, RADIO_PREFIX, toNvsId } from '/@/renderer/features/naviseerr/api/map';
 import { naviseerrQueries } from '/@/renderer/features/naviseerr/api/naviseerr-api';
 import { ActiveDownload } from '/@/renderer/features/naviseerr/api/types';
 import { openChooseFile } from '/@/renderer/features/naviseerr/components/choose-file-modal';
@@ -48,9 +48,10 @@ const pageOf = (download: ActiveDownload) => {
     if (download.downloadType === 'PLAYLIST') {
         return generatePath(AppRoute.PLAYLISTS_DETAIL_SONGS, { playlistId: id });
     }
-    if (download.downloadType === 'CURATED') {
+    if (download.downloadType === 'CURATED' || download.downloadType === 'RADIO') {
+        const prefix = download.downloadType === 'CURATED' ? CURATED_PREFIX : RADIO_PREFIX;
         return generatePath(AppRoute.PLAYLISTS_DETAIL_SONGS, {
-            playlistId: toNvsId(CURATED_PREFIX + download.youtubeId),
+            playlistId: toNvsId(prefix + download.youtubeId),
         });
     }
     return null;

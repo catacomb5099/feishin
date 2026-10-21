@@ -3,10 +3,16 @@ import Fuse from 'fuse.js';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createCallable } from 'react-call';
 import { useTranslation } from 'react-i18next';
+import { generatePath, useNavigate } from 'react-router';
 
 import { GoToAction } from '/@/renderer/features/context-menu/actions/go-to-action';
-import { fromNvsId, RemoteSong } from '/@/renderer/features/naviseerr/api/map';
-import { naviseerrQueries } from '/@/renderer/features/naviseerr/api/naviseerr-api';
+import {
+    fromNvsId,
+    RADIO_PREFIX,
+    RemoteSong,
+    toNvsId,
+} from '/@/renderer/features/naviseerr/api/map';
+import { naviseerrQueries, startRadio } from '/@/renderer/features/naviseerr/api/naviseerr-api';
 import {
     requestCollectionDownload,
     requestSongDownload,
@@ -20,6 +26,7 @@ import { getNaviseerrAddress } from '/@/renderer/features/naviseerr/store/navise
 import { playlistsQueries } from '/@/renderer/features/playlists/api/playlists-api';
 import { useRecentPlaylists } from '/@/renderer/features/playlists/hooks/use-recent-playlists';
 import { queryClient } from '/@/renderer/lib/react-query';
+import { AppRoute } from '/@/renderer/router/routes';
 import { useCurrentServer } from '/@/renderer/store';
 import { ContextMenu } from '/@/shared/components/context-menu/context-menu';
 import { Icon } from '/@/shared/components/icon/icon';
@@ -186,6 +193,21 @@ const RemoteAddToPlaylist = ({ cmd }: { cmd: RemoteMenuCommand }) => {
 
 const RemoteMenuContent = ({ cmd }: { cmd: RemoteMenuCommand }) => {
     const { t } = useTranslation('naviseerr');
+    const navigate = useNavigate();
+
+    const openRadio = (song: RemoteSong) => {
+        const toastId = toast.info({ message: t('radio.starting', { title: song.name }) });
+        startRadio(song._nvs.youtubeId)
+            .then((radio) => {
+                toast.hide(toastId);
+                navigate(
+                    generatePath(AppRoute.PLAYLISTS_DETAIL_SONGS, {
+                        playlistId: toNvsId(RADIO_PREFIX + radio.id),
+                    }),
+                );
+            })
+            .catch((error) => toast.error({ message: (error as Error).message }));
+    };
     const play = usePlayFromLibrary();
     const songs = cmd.type === LibraryItem.SONG ? cmd.items : null;
 
@@ -213,6 +235,11 @@ const RemoteMenuContent = ({ cmd }: { cmd: RemoteMenuCommand }) => {
                 </ContextMenu.Item>
             )}
             <RemoteAddToPlaylist cmd={cmd} />
+            {songs?.length === 1 && (
+                <ContextMenu.Item leftIcon="radio" onSelect={() => openRadio(songs[0])}>
+                    {t('radio.start')}
+                </ContextMenu.Item>
+            )}
             {cmd.type !== LibraryItem.PLAYLIST && (
                 <>
                     <ContextMenu.Divider />
