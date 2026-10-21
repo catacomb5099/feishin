@@ -8,6 +8,7 @@ import { PageHeader } from '/@/renderer/components/page-header/page-header';
 import { toNvsId } from '/@/renderer/features/naviseerr/api/map';
 import { naviseerrQueries } from '/@/renderer/features/naviseerr/api/naviseerr-api';
 import { ActiveDownload } from '/@/renderer/features/naviseerr/api/types';
+import { openChooseFile } from '/@/renderer/features/naviseerr/components/choose-file-modal';
 import { RemoteEmptyState } from '/@/renderer/features/naviseerr/components/remote-empty-state';
 import {
     downloadAgain,
@@ -153,6 +154,11 @@ const DownloadRow = ({ download }: { download: ActiveDownload }) => {
                             {failed && (
                                 <DropdownMenu.Item onClick={() => act(download, 'retry')}>
                                     {t('downloads.retry')}
+                                </DropdownMenu.Item>
+                            )}
+                            {download.stage !== 'SUCCEEDED' && (
+                                <DropdownMenu.Item onClick={() => openChooseFile(download)}>
+                                    {t('chooseFile.action')}
                                 </DropdownMenu.Item>
                             )}
                             {download.stage === 'SUCCEEDED' && (

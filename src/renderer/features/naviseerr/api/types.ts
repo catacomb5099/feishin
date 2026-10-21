@@ -48,6 +48,38 @@ export type Addition = {
     youtubeId: string;
 };
 
+export type Candidates = {
+    candidates: {
+        bitrateKbps: null | number;
+        extension: string;
+        filename: string;
+        freeSlot: boolean | null;
+        grade: string;
+        isCurrent: boolean;
+        lengthSeconds: null | number;
+        queueLength: null | number;
+        size: number;
+        uploadSpeed: null | number;
+        username: string;
+    }[];
+    query: null | string;
+    reason: null | string;
+    status: 'NONE' | 'READY' | 'SEARCHING';
+    taskId: string;
+};
+
+export type DownloadDetail = {
+    download: ActiveDownload;
+    songs: {
+        artists: string[];
+        position: number;
+        stage: DownloadStage;
+        taskId: string;
+        title: null | string;
+        youtubeId: string;
+    }[];
+};
+
 export type DownloadStage =
     | 'DOWNLOADING'
     | 'FAILED'

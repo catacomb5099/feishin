@@ -54,6 +54,8 @@ the boundary of a future plugin.
 - `sidebar.ts` the Downloads sidebar entry. T8 and T9 import it directly instead of `index.ts`, because the settings
   store is imported by almost everything and going through `index.ts` would make an import cycle.
 - `routes/downloads-route.tsx` the Downloads page (Active / History), built like Feishin's Radio page.
+- `components/choose-file-modal.tsx` "Choose a file" (manual import) as a Feishin modal: the files Soulseek found
+  for a song, a new search, and Use this.
 - `store/` the persisted switch and address (`store_naviseerr`).
 - `components/` the module's screens and parts.
 - `i18n/en.json` the strings, registered as the `naviseerr` namespace (Feishin's `en.json` is untouched).
