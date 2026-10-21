@@ -6,9 +6,16 @@ import { useParams } from 'react-router';
 import { NativeScrollArea } from '/@/renderer/components/native-scroll-area/native-scroll-area';
 import headerStyles from '/@/renderer/features/albums/components/album-detail-header.module.css';
 import { JoinedArtists } from '/@/renderer/features/albums/components/joined-artists';
-import { fromNvsId, toRelatedArtists, toSong } from '/@/renderer/features/naviseerr/api/map';
+import {
+    fromNvsId,
+    toAlbum,
+    toPlaylist,
+    toRelatedArtists,
+    toSong,
+} from '/@/renderer/features/naviseerr/api/map';
 import { naviseerrQueries } from '/@/renderer/features/naviseerr/api/naviseerr-api';
 import { NvsCollection } from '/@/renderer/features/naviseerr/api/types';
+import { RemoteMenu } from '/@/renderer/features/naviseerr/components/remote-context-menu';
 import { RemoteEmptyState } from '/@/renderer/features/naviseerr/components/remote-empty-state';
 import {
     RemoteHeaderBar,
@@ -69,7 +76,16 @@ const RemoteCollectionPage = ({
         [collection, isAlbum],
     );
 
-    const action = useCollectionAction({ id: collection.id, songs, type });
+    const action = {
+        ...useCollectionAction({ id: collection.id, songs, type }),
+        onMore: (event: React.MouseEvent<HTMLButtonElement>) =>
+            RemoteMenu.call({
+                cmd: isAlbum
+                    ? { items: [toAlbum(collection)], type: LibraryItem.ALBUM }
+                    : { items: [toPlaylist(collection)], type: LibraryItem.PLAYLIST },
+                event,
+            }),
+    };
 
     const { background } = useFastAverageColor({
         id: nvsId,
@@ -149,6 +165,7 @@ const RemoteCollectionPage = ({
                     />
                 </LibraryContainer>
             </NativeScrollArea>
+            <RemoteMenu.Root />
         </AnimatedPage>
     );
 };

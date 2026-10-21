@@ -27,6 +27,27 @@ export type ActiveDownloads = {
     terminalRetentionMs: number;
 };
 
+export type Addition = {
+    addedAt: null | string;
+    additionId: string;
+    artists: null | string[];
+    downloadId: string;
+    durationSeconds: null | number;
+    imageUrl: null | string;
+    playlistId: string;
+    reason: null | string;
+    requestedAt: string;
+    server: 'JELLYFIN' | 'NAVIDROME';
+    state:
+        | 'ADDED'
+        | 'DOWNLOAD_FAILED'
+        | 'GAVE_UP'
+        | 'WAITING_FOR_DOWNLOAD'
+        | 'WAITING_FOR_MEDIA_SERVER';
+    title: null | string;
+    youtubeId: string;
+};
+
 export type DownloadStage =
     | 'DOWNLOADING'
     | 'FAILED'

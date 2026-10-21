@@ -68,5 +68,21 @@
         "NOT_IN_LIBRARY": "This song isn't in your library yet.",
         "NOT_FOUND_IN_MEDIA_SERVER": "The song is downloaded but your music server hasn't picked it up yet. Try again in a minute.",
         "MEDIA_SERVER_NOT_CONNECTED": "The download server is not connected to this music server."
+    },
+    "playlist": {
+        "queued": "Downloading {{title}}. It goes into {{playlist}} when it's ready.",
+        "queuedMany": "Downloading {{title}}. Its songs go into {{playlist}} as they're ready.",
+        "added_one": "Added to {{playlist}}",
+        "added_other": "Added {{count}} songs to {{playlist}}",
+        "yours": "your playlist",
+        "downloadFailed": "{{title}} couldn't be downloaded, so it isn't in {{playlist}} yet. Try the download again.",
+        "gaveUp": {
+            "NOT_FOUND_IN_MEDIA_SERVER": "{{title}} was downloaded, but your music server never showed it, so it isn't in {{playlist}}.",
+            "PLAYLIST_GONE": "{{playlist}} no longer exists, so {{title}} wasn't added.",
+            "NOT_EDITABLE": "{{playlist}} can't be changed, so {{title}} wasn't added.",
+            "MEDIA_SERVER_NOT_CONNECTED": "The download server lost its connection to your music server, so {{title}} isn't in {{playlist}}.",
+            "NOT_IN_DOWNLOAD": "{{title}} wasn't part of that download, so it isn't in {{playlist}}.",
+            "unknown": "{{title}} couldn't be added to {{playlist}}."
+        }
     }
 }

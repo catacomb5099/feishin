@@ -46,6 +46,9 @@ the boundary of a future plugin.
   download lands it shows a toast and refreshes Feishin's library lists.
 - `hooks/use-library-state.ts` finds a downloaded song in Navidrome or Jellyfin (through the server) so Feishin's
   own player plays it; only when naviseerr files into the same kind of server Feishin is using.
+- `components/remote-context-menu.tsx` the module's own right-click / "..." menu (Download, Add to playlist, Go to);
+  Feishin's menus stay on library items. `hooks/use-playlist-additions.ts` asks the server to put a song into one of
+  your playlists once it is downloaded, and tells you when it is in.
 - `store/` the persisted switch and address (`store_naviseerr`).
 - `components/` the module's screens and parts.
 - `i18n/en.json` the strings, registered as the `naviseerr` namespace (Feishin's `en.json` is untouched).

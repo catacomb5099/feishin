@@ -11,6 +11,7 @@ import {
     RemoteRowsContext,
     RowState,
 } from '/@/renderer/features/naviseerr/components/naviseerr-cell';
+import { RemoteMenu } from '/@/renderer/features/naviseerr/components/remote-context-menu';
 import {
     failureText,
     findDownload,
@@ -99,12 +100,11 @@ export const useRowStates = (songs: RemoteSong[]) => {
 
 interface RemoteSongTableProps {
     columns: ItemTableListColumnConfig[];
-    onMore?: (song: RemoteSong, event: React.MouseEvent<unknown>) => void;
     songs: RemoteSong[];
 }
 
 /** Feishin's song table for songs you may not have: Download instead of Play. */
-export const RemoteSongTable = ({ columns, onMore, songs }: RemoteSongTableProps) => {
+export const RemoteSongTable = ({ columns, songs }: RemoteSongTableProps) => {
     const tableConfig = useSettingsStore((state) => state.lists[ItemListKey.ALBUM_DETAIL]?.table);
     const stateOf = useRowStates(songs);
 
@@ -120,6 +120,19 @@ export const RemoteSongTable = ({ columns, onMore, songs }: RemoteSongTableProps
             }
         },
         [play, stateOf],
+    );
+
+    const onMore = useCallback(
+        (song: RemoteSong, event: React.MouseEvent<unknown>) =>
+            RemoteMenu.call({
+                cmd: {
+                    inLibrary: stateOf(song).kind === 'done',
+                    items: [song],
+                    type: LibraryItem.SONG,
+                },
+                event,
+            }),
+        [stateOf],
     );
 
     const rows = useMemo(() => ({ activate, more: onMore, stateOf }), [activate, onMore, stateOf]);
