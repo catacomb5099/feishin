@@ -61,7 +61,15 @@
         "showAll": "Show all",
         "tab": "Discover",
         "empty": "Search for music you don't have yet.",
-        "downloading": "Downloading {{title}}."
+        "downloading": "Downloading {{title}}.",
+        "showMore": "Show more",
+        "kind": {
+            "all": "All",
+            "tracks": "Songs",
+            "artists": "Artists",
+            "albums": "Albums",
+            "playlists": "Playlists"
+        }
     },
     "landing": {
         "added": "Added to your library: {{title}}",

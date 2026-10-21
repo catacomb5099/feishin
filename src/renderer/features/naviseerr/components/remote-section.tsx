@@ -9,6 +9,7 @@ import { useGridRows } from '/@/renderer/components/item-list/helpers/use-grid-r
 import { ItemControls } from '/@/renderer/components/item-list/types';
 import styles from '/@/renderer/features/artists/components/album-artist-detail-content.module.css';
 import { RemoteMenu } from '/@/renderer/features/naviseerr/components/remote-context-menu';
+import { Grid } from '/@/shared/components/grid/grid';
 import { Group } from '/@/shared/components/group/group';
 import { TextTitle } from '/@/shared/components/text-title/text-title';
 import { Album, AlbumArtist, LibraryItem, Playlist } from '/@/shared/types/domain-types';
@@ -51,15 +52,11 @@ interface RemoteCarouselProps {
     title: ReactNode;
 }
 
-/** A shelf of Feishin cards for things you don't have: open on click, no Play on hover. */
-export const RemoteCarousel = ({
-    containerQuery,
-    data,
-    extra,
-    itemType,
-    plainTitle,
-    title,
-}: RemoteCarouselProps) => {
+/** Feishin cards for things you don't have: open on click, the module's menu, no Play on hover. */
+const useRemoteCards = (
+    data: (Album | AlbumArtist | Playlist)[],
+    itemType: keyof typeof LIST_KEYS,
+) => {
     const rows = useGridRows(itemType, LIST_KEYS[itemType]);
     const controls = useMemo((): ItemControls => {
         if (itemType === LibraryItem.ALBUM_ARTIST) return {};
@@ -77,7 +74,7 @@ export const RemoteCarousel = ({
         };
     }, [itemType]);
 
-    const cards = useMemo(
+    return useMemo(
         () =>
             data.map((item) => ({
                 content: (
@@ -95,6 +92,38 @@ export const RemoteCarousel = ({
             })),
         [controls, data, itemType, rows],
     );
+};
+
+/** The same cards in a wrapping grid, for a list that is not a shelf. */
+export const RemoteGrid = ({
+    data,
+    itemType,
+}: {
+    data: (Album | AlbumArtist | Playlist)[];
+    itemType: keyof typeof LIST_KEYS;
+}) => {
+    const cards = useRemoteCards(data, itemType);
+    return (
+        <Grid>
+            {cards.map((card) => (
+                <Grid.Col key={card.id} span={{ base: 6, lg: 2, md: 3, sm: 4 }}>
+                    {card.content}
+                </Grid.Col>
+            ))}
+        </Grid>
+    );
+};
+
+/** A shelf of Feishin cards for things you don't have. */
+export const RemoteCarousel = ({
+    containerQuery,
+    data,
+    extra,
+    itemType,
+    plainTitle,
+    title,
+}: RemoteCarouselProps) => {
+    const cards = useRemoteCards(data, itemType);
 
     if (cards.length === 0) return null;
 
