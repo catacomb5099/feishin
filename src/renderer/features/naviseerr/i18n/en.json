@@ -40,5 +40,14 @@
         "SOULSEEK_OFFLINE": "Not connected to Soulseek.",
         "CANCELLED": "Cancelled.",
         "unknown": "The download failed."
+    },
+    "artist": {
+        "subscribers": "{{count}} subscribers",
+        "popular": "Popular",
+        "seeMore": "See more",
+        "showLess": "Show less",
+        "albums": "Albums",
+        "singles": "Singles and EPs",
+        "about": "About"
     }
 }

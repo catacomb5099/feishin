@@ -52,8 +52,9 @@ const AlbumArtistListRoute = lazy(
     () => import('/@/renderer/features/artists/routes/album-artist-list-route'),
 );
 
-const AlbumArtistDetailRoute = lazy(
-    () => import('/@/renderer/features/artists/routes/album-artist-detail-route'),
+const AlbumArtistDetailRoute = withRemote(
+    lazy(() => import('/@/renderer/features/artists/routes/album-artist-detail-route')),
+    'artist',
 );
 
 const AlbumArtistDetailTopSongsListRoute = lazy(

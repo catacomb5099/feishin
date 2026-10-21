@@ -45,6 +45,14 @@ export const ALBUM_COLUMNS = columnsOf([
     TableColumn.ACTIONS,
 ]);
 
+export const ARTIST_COLUMNS = columnsOf([
+    TableColumn.ROW_INDEX,
+    TableColumn.TITLE_COMBINED,
+    TableColumn.PLAY_COUNT,
+    TableColumn.DURATION,
+    TableColumn.ACTIONS,
+]);
+
 export const PLAYLIST_COLUMNS = columnsOf([
     TableColumn.ROW_INDEX,
     TableColumn.TITLE_COMBINED,
