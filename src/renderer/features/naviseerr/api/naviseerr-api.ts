@@ -11,6 +11,7 @@ import {
     LibrarySongState,
     NvsArtistPage,
     NvsCollection,
+    NvsSearch,
     Session,
     Status,
 } from '/@/renderer/features/naviseerr/api/types';
@@ -75,6 +76,15 @@ export const naviseerrQueries = {
             },
             queryKey: [...nvsKeys.librarySongs(address), ids.join(',')],
             retry: false,
+        }),
+    search: (address: null | string, query: string) =>
+        queryOptions({
+            enabled: !!address && query.trim() !== '',
+            queryFn: ({ signal }) =>
+                nvsRequest<NvsSearch>(`/search/${segment(query.trim())}`, { signal }),
+            queryKey: [...nvsKeys.root(address), 'search', query.trim()],
+            retry: false,
+            staleTime: 5 * 60_000,
         }),
     session: (address: null | string) =>
         queryOptions({

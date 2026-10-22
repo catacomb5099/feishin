@@ -9,6 +9,7 @@ import {
     SONG_TABLE_COLUMNS,
 } from '/@/renderer/components/item-list/item-table-list/default-columns';
 import { PageHeader } from '/@/renderer/components/page-header/page-header';
+import { NaviseerrSearchTab } from '/@/renderer/features/naviseerr';
 import { FilterBar } from '/@/renderer/features/shared/components/filter-bar';
 import { LibraryHeaderBar } from '/@/renderer/features/shared/components/library-header-bar';
 import {
@@ -119,8 +120,11 @@ export const SearchHeader = ({ navigationId }: SearchHeaderProps) => {
                         >
                             {t('entity.artist', { count: 2 })}
                         </Button>
+                        <NaviseerrSearchTab navigationId={navigationId} />
                     </ButtonGroup>
-                    <ListConfigMenu {...listConfigMenuProps[itemType]} />
+                    {listConfigMenuProps[itemType] && (
+                        <ListConfigMenu {...listConfigMenuProps[itemType]} />
+                    )}
                 </Flex>
             </FilterBar>
         </Stack>

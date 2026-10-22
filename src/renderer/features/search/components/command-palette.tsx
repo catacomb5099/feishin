@@ -1,5 +1,6 @@
 import { useCallback, useDeferredValue, useRef, useState } from 'react';
 
+import { NaviseerrSearchSection } from '/@/renderer/features/naviseerr';
 import { Command, CommandPalettePages } from '/@/renderer/features/search/components/command';
 import { GoToCommands } from '/@/renderer/features/search/components/go-to-commands';
 import { HomeCommands } from '/@/renderer/features/search/components/home-commands';
@@ -28,6 +29,7 @@ interface CommandPaletteProps {
 const SEARCH_SECTION_IDS = {
     albums: 'albums',
     artists: 'artists',
+    naviseerr: 'naviseerr',
     tracks: 'tracks',
 } as const;
 
@@ -118,6 +120,19 @@ function CommandPaletteSearch({
                             setSearchSectionExpanded(
                                 SEARCH_SECTION_IDS.tracks,
                                 !(searchSectionsExpanded[SEARCH_SECTION_IDS.tracks] ?? true),
+                            )
+                        }
+                        query={query}
+                    />
+                    <NaviseerrSearchSection
+                        debouncedQuery={deferredSearchQuery}
+                        expanded={searchSectionsExpanded[SEARCH_SECTION_IDS.naviseerr] ?? true}
+                        isHome={isHome}
+                        onSelectResult={onSelectResult}
+                        onToggle={() =>
+                            setSearchSectionExpanded(
+                                SEARCH_SECTION_IDS.naviseerr,
+                                !(searchSectionsExpanded[SEARCH_SECTION_IDS.naviseerr] ?? true),
                             )
                         }
                         query={query}
