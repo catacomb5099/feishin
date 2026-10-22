@@ -144,5 +144,9 @@
         "madeForYou": "Made for you",
         "era": "Made for you: {{era}}",
         "allTime": "All-time hits"
+    },
+    "radio": {
+        "start": "Go to song radio",
+        "starting": "Starting a radio from {{title}}..."
     }
 }

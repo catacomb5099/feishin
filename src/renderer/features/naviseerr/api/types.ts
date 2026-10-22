@@ -153,6 +153,15 @@ export type NvsPlaylist = {
     views: null | string;
 };
 
+export type NvsRadio = {
+    artists: string[];
+    iconURL: string;
+    id: string;
+    name: string;
+    trackCount: number;
+    tracks: NvsCollectionTrack[];
+};
+
 export type NvsSearch = {
     albums: NvsAlbum[];
     artists: NvsArtist[];
