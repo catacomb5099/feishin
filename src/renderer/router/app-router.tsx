@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { HashRouter, Route, Routes } from 'react-router';
 
+import { withRemote } from '/@/renderer/features/naviseerr';
 import { ShuffleAllContextModal } from '/@/renderer/features/player/components/shuffle-all-modal';
 import { SettingsContextModal } from '/@/renderer/features/settings/components/settings-modal';
 import { RouterErrorBoundary } from '/@/renderer/features/shared/components/router-error-boundary';
@@ -20,8 +21,9 @@ const AlbumListRoute = lazy(() => import('/@/renderer/features/albums/routes/alb
 
 const SongListRoute = lazy(() => import('/@/renderer/features/songs/routes/song-list-route'));
 
-const PlaylistDetailSongListRoute = lazy(
-    () => import('/@/renderer/features/playlists/routes/playlist-detail-song-list-route'),
+const PlaylistDetailSongListRoute = withRemote(
+    lazy(() => import('/@/renderer/features/playlists/routes/playlist-detail-song-list-route')),
+    'playlist',
 );
 
 const PlaylistListRoute = lazy(
@@ -62,8 +64,9 @@ const AlbumArtistDetailFavoriteSongsListRoute = lazy(
     () => import('../features/artists/routes/album-artist-detail-favorite-songs-list-route'),
 );
 
-const AlbumDetailRoute = lazy(
-    () => import('/@/renderer/features/albums/routes/album-detail-route'),
+const AlbumDetailRoute = withRemote(
+    lazy(() => import('/@/renderer/features/albums/routes/album-detail-route')),
+    'album',
 );
 
 const DummyAlbumDetailRoute = lazy(

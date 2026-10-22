@@ -5,3 +5,4 @@ import en from '/@/renderer/features/naviseerr/i18n/en.json';
 i18n.addResourceBundle('en', 'naviseerr', en);
 
 export { NaviseerrSettings } from '/@/renderer/features/naviseerr/components/naviseerr-settings';
+export { withRemote } from '/@/renderer/features/naviseerr/routes/with-remote';
