@@ -8,6 +8,8 @@ import {
 import {
     ActiveDownload,
     ActiveDownloads,
+    Candidates,
+    DownloadDetail,
     LibrarySongState,
     NvsArtistPage,
     NvsCollection,
@@ -51,6 +53,17 @@ export const naviseerrQueries = {
             retry: false,
             staleTime: 5 * 60_000,
         }),
+    candidates: (address: null | string, downloadId: string, taskId: string) =>
+        queryOptions({
+            enabled: !!address,
+            queryFn: ({ signal }) =>
+                nvsRequest<Candidates>(`/downloads/${downloadId}/tasks/${taskId}/candidates`, {
+                    signal,
+                }),
+            queryKey: [...nvsKeys.root(address), 'candidates', downloadId, taskId],
+            refetchInterval: (query) => (query.state.data?.status === 'SEARCHING' ? 3000 : false),
+            retry: false,
+        }),
     collection: (address: null | string, id: string, type: 'ALBUM' | 'PLAYLIST') =>
         queryOptions({
             enabled: !!address,
@@ -59,6 +72,14 @@ export const naviseerrQueries = {
             queryKey: [...nvsKeys.root(address), 'collection', type, id],
             retry: false,
             staleTime: 5 * 60_000,
+        }),
+    downloadDetail: (address: null | string, downloadId: string) =>
+        queryOptions({
+            enabled: !!address,
+            queryFn: ({ signal }) =>
+                nvsRequest<DownloadDetail>(`/downloads/${downloadId}`, { signal }),
+            queryKey: [...nvsKeys.root(address), 'downloads', downloadId],
+            retry: false,
         }),
     // S2; an older server answers 404, which means "nothing known" (every row shows Download).
     librarySongs: (address: null | string, ids: string[]) =>

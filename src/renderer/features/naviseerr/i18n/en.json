@@ -104,5 +104,36 @@
         "SUCCEEDED": "Downloaded",
         "PARTIAL_SUCCESS": "{{done}} of {{total}} downloaded",
         "FAILED": "Failed"
+    },
+    "chooseFile": {
+        "action": "Choose a file",
+        "title": "Choose a file: {{title}}",
+        "song": "Song",
+        "searchFor": "Search Soulseek for",
+        "search": "Search",
+        "stillSearching": "Still searching Soulseek...",
+        "file": "File",
+        "quality": "Format",
+        "length": "Length",
+        "size": "Size",
+        "match": "Match",
+        "current": "In use",
+        "use": "Use this",
+        "picked": "Downloading {{file}}.",
+        "grade": {
+            "EXACT": "Exact",
+            "OTHER_VERSION": "Other version",
+            "UNVERIFIED": "Unverified",
+            "NONE": "Not a match"
+        },
+        "reason": {
+            "ALREADY_IN_LIBRARY": "This song is already in your library.",
+            "NO_OWN_SEARCH": "This song was not searched on its own. Search for it above.",
+            "SEARCH_FAILED": "The search didn't finish. Search again above.",
+            "SOULSEEK_OFFLINE": "Soulseek was offline. Search again above.",
+            "CANCELLED": "The download was cancelled while it searched. Search again above.",
+            "NO_RESULTS": "Soulseek found nothing. Try other words above.",
+            "BEFORE_CACHE": "No list was kept for this song. Search again above."
+        }
     }
 }
