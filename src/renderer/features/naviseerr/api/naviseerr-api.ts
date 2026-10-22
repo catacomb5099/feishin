@@ -137,6 +137,17 @@ export const naviseerrQueries = {
             retry: false,
             staleTime: 5 * 60_000,
         }),
+    searchKind: (address: null | string, query: string, kind: string, limit: number) =>
+        queryOptions({
+            enabled: !!address && query.trim() !== '',
+            queryFn: ({ signal }) =>
+                nvsRequest<NvsSearch>(`/search/${segment(query.trim())}/${kind}?limit=${limit}`, {
+                    signal,
+                }),
+            queryKey: [...nvsKeys.root(address), 'search', query.trim(), kind, limit],
+            retry: false,
+            staleTime: 5 * 60_000,
+        }),
     session: (address: null | string) =>
         queryOptions({
             enabled: !!address,
