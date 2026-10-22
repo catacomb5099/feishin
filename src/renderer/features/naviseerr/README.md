@@ -42,7 +42,10 @@ the boundary of a future plugin.
   node -e "const p=require('path'),e=require(require.resolve('esbuild',{paths:[p.dirname(require.resolve('vite'))]}));e.build({entryPoints:[process.argv[1]],bundle:true,platform:'node',write:false,logLevel:'error',plugins:[{name:'at',setup(b){b.onResolve({filter:/^\/@\//},a=>({path:p.resolve('src',a.path.slice(3))+'.ts'}))}}]}).then(r=>new Function('require',r.outputFiles[0].text)(require))" src/renderer/features/naviseerr/api/map.check.ts
   ```
 
-- `hooks/use-downloads.ts` one poller of the server's download feed for the whole app (outside React).
+- `hooks/use-downloads.ts` one poller of the server's download feed for the whole app (outside React); when a
+  download lands it shows a toast and refreshes Feishin's library lists.
+- `hooks/use-library-state.ts` finds a downloaded song in Navidrome or Jellyfin (through the server) so Feishin's
+  own player plays it; only when naviseerr files into the same kind of server Feishin is using.
 - `store/` the persisted switch and address (`store_naviseerr`).
 - `components/` the module's screens and parts.
 - `i18n/en.json` the strings, registered as the `naviseerr` namespace (Feishin's `en.json` is untouched).

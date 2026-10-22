@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
 import i18n from '/@/i18n/i18n';
+import { queryKeys } from '/@/renderer/api/query-keys';
 import {
     downloadCollection,
     downloadSong,
@@ -19,7 +20,9 @@ import {
     getNaviseerrAddress,
     useNaviseerrAddress,
 } from '/@/renderer/features/naviseerr/store/naviseerr-store';
+import { startScanWatch } from '/@/renderer/features/shared/hooks/use-scan-status';
 import { queryClient } from '/@/renderer/lib/react-query';
+import { useAuthStore } from '/@/renderer/store';
 import { toast } from '/@/shared/components/toast/toast';
 
 export const isLive = (download: ActiveDownload) => !TERMINAL_STAGES.includes(download.stage);
@@ -115,11 +118,18 @@ const fail = (error: unknown): never => {
     throw error;
 };
 
+const alreadyThere = (download: ActiveDownload) => {
+    if (download.stage === 'SUCCEEDED') {
+        toast.info({ message: i18n.t('landing.already', { ns: 'naviseerr' }) });
+    }
+    return download;
+};
+
 export const requestSongDownload = (youtubeId: string) =>
-    downloadSong(youtubeId).then(remember, fail);
+    downloadSong(youtubeId).then(remember, fail).then(alreadyThere);
 
 export const requestCollectionDownload = (youtubeId: string, type: 'ALBUM' | 'PLAYLIST') =>
-    downloadCollection(youtubeId, type).then(remember, fail);
+    downloadCollection(youtubeId, type).then(remember, fail).then(alreadyThere);
 
 /** One plain sentence for a download that failed. */
 export const failureText = (download: ActiveDownload) =>
@@ -127,3 +137,46 @@ export const failureText = (download: ActiveDownload) =>
         defaultValue: i18n.t('failure.unknown', { ns: 'naviseerr' }),
         ns: 'naviseerr',
     });
+
+// A scan can finish before Feishin's scan watch first looks; two late refreshes cover that.
+const LIBRARY_REFRESH_MS = [5_000, 20_000];
+
+const refreshLibrary = () => {
+    const serverId = useAuthStore.getState().currentServer?.id;
+    if (!serverId) return;
+    [
+        queryKeys.songs.root(serverId),
+        queryKeys.albums.root(serverId),
+        queryKeys.albumArtists.root(serverId),
+        queryKeys.artists.root(serverId),
+        queryKeys.playlists.root(serverId),
+        queryKeys.search.root(serverId),
+        [serverId, 'home'],
+    ].forEach((queryKey) => queryClient.invalidateQueries({ queryKey }));
+};
+
+// Landing: a download seen running is now finished.
+onDownloadsPolled((previous, next) => {
+    let landed = false;
+    for (const download of next.downloads) {
+        const before = previous?.downloads.find((d) => d.downloadId === download.downloadId);
+        if (!before || !isLive(before) || isLive(download)) continue;
+        const title = download.title ?? '';
+        if (download.stage === 'FAILED') {
+            toast.error({ message: `${title}: ${failureText(download)}` });
+            continue;
+        }
+        landed = true;
+        toast.success({
+            message: i18n.t(download.stage === 'SUCCEEDED' ? 'landing.added' : 'landing.partial', {
+                failed: download.songsFailed,
+                ns: 'naviseerr',
+                title,
+            }),
+        });
+    }
+    if (landed) {
+        startScanWatch();
+        LIBRARY_REFRESH_MS.forEach((ms) => setTimeout(refreshLibrary, ms));
+    }
+});
