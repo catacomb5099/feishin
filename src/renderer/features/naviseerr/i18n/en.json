@@ -84,5 +84,25 @@
             "NOT_IN_DOWNLOAD": "{{title}} wasn't part of that download, so it isn't in {{playlist}}.",
             "unknown": "{{title}} couldn't be added to {{playlist}}."
         }
+    },
+    "downloads": {
+        "title": "Downloads",
+        "active": "Active",
+        "history": "History",
+        "empty": "Nothing here yet. Download something from search, an album or a playlist.",
+        "cancel": "Cancel",
+        "retry": "Try again",
+        "again": "Download again",
+        "more": "More"
+    },
+    "stage": {
+        "QUEUED": "Waiting",
+        "STARTING": "Starting",
+        "SEARCHING": "Searching",
+        "READY_TO_DOWNLOAD": "Ready to download",
+        "DOWNLOADING": "Downloading {{percent}}%",
+        "SUCCEEDED": "Downloaded",
+        "PARTIAL_SUCCESS": "{{done}} of {{total}} downloaded",
+        "FAILED": "Failed"
     }
 }

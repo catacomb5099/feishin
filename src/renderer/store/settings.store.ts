@@ -21,6 +21,7 @@ import {
     PLAYLIST_TABLE_COLUMNS,
     SONG_TABLE_COLUMNS,
 } from '/@/renderer/components/item-list/item-table-list/default-columns';
+import { useWithDownloadsItem } from '/@/renderer/features/naviseerr/sidebar';
 import { audiomotionanalyzerPresets } from '/@/renderer/features/visualizer/components/audiomotionanalyzer/presets';
 import { AppRoute } from '/@/renderer/router/routes';
 import { getEnvSettingsOverrides } from '/@/renderer/store/env-settings-overrides';
@@ -3128,7 +3129,7 @@ export const useSidebarPlaylistListFilterRegex = () =>
     useSettingsStore((state) => state.general.sidebarPlaylistListFilterRegex, shallow);
 
 export const useSidebarItems = () =>
-    useSettingsStore((state) => state.general.sidebarItems, shallow);
+    useWithDownloadsItem(useSettingsStore((state) => state.general.sidebarItems, shallow));
 
 export const usePlayerItems = () => useSettingsStore((state) => state.general.playerItems, shallow);
 

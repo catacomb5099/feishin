@@ -31,6 +31,17 @@ export const naviseerrQueries = {
             queryKey: nvsKeys.activeDownloads(address),
             retry: false,
         }),
+    allDownloads: (address: null | string, pageNumber: number, pageSize: number) =>
+        queryOptions({
+            enabled: !!address,
+            queryFn: ({ signal }) =>
+                nvsRequest<{ downloads: ActiveDownload[]; totalPages: number }>(
+                    `/downloads/all?pageSize=${pageSize}&pageNumber=${pageNumber}`,
+                    { signal },
+                ),
+            queryKey: [...nvsKeys.root(address), 'downloads', 'all', pageSize, pageNumber],
+            retry: false,
+        }),
     artist: (address: null | string, channelId: string) =>
         queryOptions({
             enabled: !!address,
