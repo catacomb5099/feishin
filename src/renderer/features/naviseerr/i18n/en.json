@@ -1,0 +1,19 @@
+{
+    "settings": {
+        "title": "Downloads",
+        "enabled": "Find and download music you don't have",
+        "enabled_description": "Adds a Discover tab to search and Download buttons on music that is not in your library. Downloads go through your download server and land in your library.",
+        "address": "Download server address",
+        "address_description": "The address of your naviseerr server, for example https://naviseerr.example.com. The server must list this Feishin address as allowed.",
+        "address_desktop": "Works in the web version of Feishin only for now.",
+        "test": "Test",
+        "connection": "Connection",
+        "connected": "Connected",
+        "checking": "Checking...",
+        "signedOut": "You are signed out of the download server.",
+        "signIn": "Sign in"
+    },
+    "error": {
+        "unreachable": "Can't reach the download server at {{address}}. Check the address, and that it lists this Feishin address."
+    }
+}
