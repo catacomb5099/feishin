@@ -1,11 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router';
+import { Link, useParams } from 'react-router';
 
 import { NativeScrollArea } from '/@/renderer/components/native-scroll-area/native-scroll-area';
 import headerStyles from '/@/renderer/features/albums/components/album-detail-header.module.css';
-import { fromNvsId, toAlbum, toSong } from '/@/renderer/features/naviseerr/api/map';
+import {
+    fromNvsId,
+    toAlbum,
+    toAlbumArtist,
+    toPlaylist,
+    toSong,
+} from '/@/renderer/features/naviseerr/api/map';
 import { naviseerrQueries } from '/@/renderer/features/naviseerr/api/naviseerr-api';
 import { NvsArtistPage } from '/@/renderer/features/naviseerr/api/types';
 import { RemoteMenu } from '/@/renderer/features/naviseerr/components/remote-context-menu';
@@ -39,6 +45,24 @@ const BG_FALLBACK = 'var(--theme-colors-foreground-muted)';
 const POPULAR_FEW = 5;
 const POPULAR_MANY = 10;
 
+export type ArtistShelf = 'albums' | 'playlists' | 'singles';
+
+/** "Show all" next to a shelf, Feishin's own "View all" button, to the module's grid page. */
+const ShowAll = ({ artistId, shelf }: { artistId: string; shelf: ArtistShelf }) => {
+    const { t } = useTranslation('naviseerr');
+    return (
+        <Button
+            component={Link}
+            size="compact-md"
+            to={`/naviseerr/artist/${encodeURIComponent(artistId)}/${shelf}`}
+            uppercase
+            variant="subtle"
+        >
+            {t('artist.showAll')}
+        </Button>
+    );
+};
+
 const RemoteArtistPage = ({ artist, nvsId }: { artist: NvsArtistPage; nvsId: string }) => {
     const { t } = useTranslation('naviseerr');
     const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -58,6 +82,11 @@ const RemoteArtistPage = ({ artist, nvsId }: { artist: NvsArtistPage; nvsId: str
     );
     const albums = useMemo(() => artist.albums.map(toAlbum), [artist.albums]);
     const singles = useMemo(() => artist.singles.map(toAlbum), [artist.singles]);
+    const playlists = useMemo(() => artist.playlists.map(toPlaylist), [artist.playlists]);
+    const similar = useMemo(
+        () => artist.similarArtists.map(toAlbumArtist),
+        [artist.similarArtists],
+    );
 
     const { background } = useFastAverageColor({
         id: nvsId,
@@ -130,13 +159,26 @@ const RemoteArtistPage = ({ artist, nvsId }: { artist: NvsArtistPage; nvsId: str
                         )}
                         <RemoteCarousel
                             data={albums}
+                            extra={<ShowAll artistId={artist.id} shelf="albums" />}
                             itemType={LibraryItem.ALBUM}
                             title={t('artist.albums')}
                         />
                         <RemoteCarousel
                             data={singles}
+                            extra={<ShowAll artistId={artist.id} shelf="singles" />}
                             itemType={LibraryItem.ALBUM}
                             title={t('artist.singles')}
+                        />
+                        <RemoteCarousel
+                            data={playlists}
+                            extra={<ShowAll artistId={artist.id} shelf="playlists" />}
+                            itemType={LibraryItem.PLAYLIST}
+                            title={t('artist.featuring', { name: artist.name })}
+                        />
+                        <RemoteCarousel
+                            data={similar}
+                            itemType={LibraryItem.ALBUM_ARTIST}
+                            title={t('artist.fansAlsoLike')}
                         />
                         {artist.description && (
                             <section>

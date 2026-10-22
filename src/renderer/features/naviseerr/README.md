@@ -54,6 +54,8 @@ the boundary of a future plugin.
   your playlists once it is downloaded, and tells you when it is in.
 - `sidebar.ts` the Downloads sidebar entry. T8 and T9 import it directly instead of `index.ts`, because the settings
   store is imported by almost everything and going through `index.ts` would make an import cycle.
+- `routes/remote-artist-shelf-route.tsx` an artist's every album, single or playlist in Feishin's grid
+  (`/naviseerr/artist/<id>/albums|singles|playlists`).
 - `routes/downloads-route.tsx` the Downloads page (Active / History), built like Feishin's Radio page.
 - `components/choose-file-modal.tsx` "Choose a file" (manual import) as a Feishin modal: the files Soulseek found
   for a song, a new search, and Use this.

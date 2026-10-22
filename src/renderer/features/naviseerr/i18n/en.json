@@ -50,7 +50,11 @@
         "showLess": "Show less",
         "albums": "Albums",
         "singles": "Singles and EPs",
-        "about": "About"
+        "about": "About",
+        "featuring": "Featuring {{name}}",
+        "fansAlsoLike": "Fans also like",
+        "showAll": "Show all",
+        "shelfTitle": "{{name}}: {{shelf}}"
     },
     "search": {
         "section": "Not in your library",

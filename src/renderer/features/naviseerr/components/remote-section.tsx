@@ -44,6 +44,7 @@ const LIST_KEYS = {
 interface RemoteCarouselProps {
     containerQuery?: ReturnType<typeof useGridCarouselContainerQuery>;
     data: (Album | AlbumArtist | Playlist)[];
+    extra?: ReactNode;
     itemType: keyof typeof LIST_KEYS;
     // Home's shelves use Feishin's plain carousel title; detail pages the section title with a rule.
     plainTitle?: boolean;
@@ -54,6 +55,7 @@ interface RemoteCarouselProps {
 export const RemoteCarousel = ({
     containerQuery,
     data,
+    extra,
     itemType,
     plainTitle,
     title,
@@ -103,7 +105,9 @@ export const RemoteCarousel = ({
             onNextPage={() => {}}
             onPrevPage={() => {}}
             rowCount={1}
-            title={plainTitle ? title : <RemoteSectionTitle>{title}</RemoteSectionTitle>}
+            title={
+                plainTitle ? title : <RemoteSectionTitle extra={extra}>{title}</RemoteSectionTitle>
+            }
         />
     );
 };
