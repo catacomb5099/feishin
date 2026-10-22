@@ -22,7 +22,7 @@ the boundary of a future plugin.
 
 | # | Upstream file | Change |
 |---|---|---|
-| T1 | `router/app-router.tsx` | `withRemote(...)` around the album and playlist detail routes |
+| T1 | `router/app-router.tsx` | `withRemote(...)` around the album, artist (both artist paths) and playlist detail routes |
 | T5 | `features/settings/components/general/general-tab.tsx` | one section entry `NaviseerrSettings` |
 | T6 | `settings.js.template` | `window.NAVISEERR_URL = "${NAVISEERR_URL}";` |
 

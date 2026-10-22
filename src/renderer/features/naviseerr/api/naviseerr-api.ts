@@ -9,6 +9,7 @@ import {
     ActiveDownload,
     ActiveDownloads,
     LibrarySongState,
+    NvsArtistPage,
     NvsCollection,
     Session,
     Status,
@@ -28,6 +29,15 @@ export const naviseerrQueries = {
             queryFn: ({ signal }) => nvsRequest<ActiveDownloads>('/downloads/active', { signal }),
             queryKey: nvsKeys.activeDownloads(address),
             retry: false,
+        }),
+    artist: (address: null | string, channelId: string) =>
+        queryOptions({
+            enabled: !!address,
+            queryFn: ({ signal }) =>
+                nvsRequest<NvsArtistPage>(`/artists/${segment(channelId)}`, { signal }),
+            queryKey: [...nvsKeys.root(address), 'artist', channelId],
+            retry: false,
+            staleTime: 5 * 60_000,
         }),
     collection: (address: null | string, id: string, type: 'ALBUM' | 'PLAYLIST') =>
         queryOptions({

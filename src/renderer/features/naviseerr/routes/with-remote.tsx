@@ -10,6 +10,11 @@ const remoteRoutes = {
             default: m.RemoteAlbumRoute,
         })),
     ),
+    artist: lazy(() =>
+        import('/@/renderer/features/naviseerr/routes/remote-artist-route').then((m) => ({
+            default: m.RemoteArtistRoute,
+        })),
+    ),
     playlist: lazy(() =>
         import('/@/renderer/features/naviseerr/routes/remote-collection-route').then((m) => ({
             default: m.RemotePlaylistRoute,
