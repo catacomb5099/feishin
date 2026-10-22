@@ -7,6 +7,7 @@ import { NativeScrollArea } from '/@/renderer/components/native-scroll-area/nati
 import { toAlbum, toAlbumArtist, toPlaylist, toSong } from '/@/renderer/features/naviseerr/api/map';
 import { naviseerrQueries } from '/@/renderer/features/naviseerr/api/naviseerr-api';
 import { NAVISEERR_SEARCH_TAB } from '/@/renderer/features/naviseerr/components/naviseerr-search-section';
+import { RemoteMenu } from '/@/renderer/features/naviseerr/components/remote-context-menu';
 import { RemoteEmptyState } from '/@/renderer/features/naviseerr/components/remote-empty-state';
 import {
     RemoteCarousel,
@@ -114,6 +115,7 @@ export const NaviseerrSearchResults = () => {
                     />
                 </Stack>
             </LibraryContainer>
+            <RemoteMenu.Root />
         </NativeScrollArea>
     );
 };

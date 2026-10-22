@@ -8,6 +8,7 @@ import headerStyles from '/@/renderer/features/albums/components/album-detail-he
 import { fromNvsId, toAlbum, toSong } from '/@/renderer/features/naviseerr/api/map';
 import { naviseerrQueries } from '/@/renderer/features/naviseerr/api/naviseerr-api';
 import { NvsArtistPage } from '/@/renderer/features/naviseerr/api/types';
+import { RemoteMenu } from '/@/renderer/features/naviseerr/components/remote-context-menu';
 import { RemoteEmptyState } from '/@/renderer/features/naviseerr/components/remote-empty-state';
 import {
     RemoteCarousel,
@@ -148,6 +149,7 @@ const RemoteArtistPage = ({ artist, nvsId }: { artist: NvsArtistPage; nvsId: str
                     </Stack>
                 </LibraryContainer>
             </NativeScrollArea>
+            <RemoteMenu.Root />
         </AnimatedPage>
     );
 };

@@ -27,9 +27,16 @@ import { toast } from '/@/shared/components/toast/toast';
 
 export const isLive = (download: ActiveDownload) => !TERMINAL_STAGES.includes(download.stage);
 
-type PollListener = (previous: ActiveDownloads | undefined, next: ActiveDownloads) => void;
+type PollListener = (
+    previous: ActiveDownloads | undefined,
+    next: ActiveDownloads,
+) => Promise<void> | void;
 const listeners = new Set<PollListener>();
 export const onDownloadsPolled = (listener: PollListener) => listeners.add(listener);
+
+const reasons: (() => boolean)[] = [];
+/** Keeps the poller going after the downloads settle, for work that follows them. */
+export const keepPollingWhile = (reason: () => boolean) => reasons.push(reason);
 
 let timer: null | ReturnType<typeof setTimeout> = null;
 let running = false;
@@ -46,19 +53,23 @@ const tick = async () => {
     }
     running = true;
     let delay: null | number = null;
+    const key = nvsKeys.activeDownloads(address);
+    const previous = queryClient.getQueryData<ActiveDownloads>(key);
+    const wasLive = previous?.downloads.some(isLive);
     try {
-        const key = nvsKeys.activeDownloads(address);
-        const previous = queryClient.getQueryData<ActiveDownloads>(key);
         const next = await nvsRequest<ActiveDownloads>('/downloads/active');
         queryClient.setQueryData(key, next);
-        const wasLive = previous?.downloads.some(isLive);
-        if (next.downloads.some(isLive)) delay = next.pollIntervalMs || 2000;
+        if (next.downloads.some(isLive) || reasons.some((reason) => reason())) {
+            delay = next.pollIntervalMs || 2000;
+        }
         if (delay || wasLive) {
             queryClient.invalidateQueries({ queryKey: nvsKeys.librarySongs(address) });
         }
-        listeners.forEach((listener) => listener(previous, next));
+        await Promise.all([...listeners].map((listener) => listener(previous, next)));
+        if (!delay && reasons.some((reason) => reason())) delay = next.pollIntervalMs || 2000;
     } catch {
-        delay = 10_000;
+        // The server went away mid-download: keep trying, slowly.
+        delay = wasLive || reasons.some((reason) => reason()) ? 10_000 : null;
     } finally {
         running = false;
         if (again) {
@@ -125,8 +136,10 @@ const alreadyThere = (download: ActiveDownload) => {
     return download;
 };
 
-export const requestSongDownload = (youtubeId: string) =>
-    downloadSong(youtubeId).then(remember, fail).then(alreadyThere);
+export const requestSongDownload = (youtubeId: string, quiet = false) =>
+    downloadSong(youtubeId)
+        .then(remember, fail)
+        .then(quiet ? (download) => download : alreadyThere);
 
 export const requestCollectionDownload = (youtubeId: string, type: 'ALBUM' | 'PLAYLIST') =>
     downloadCollection(youtubeId, type).then(remember, fail).then(alreadyThere);
