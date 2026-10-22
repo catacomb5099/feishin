@@ -95,7 +95,9 @@
             "MEDIA_SERVER_NOT_CONNECTED": "The download server lost its connection to your music server, so {{title}} isn't in {{playlist}}.",
             "NOT_IN_DOWNLOAD": "{{title}} wasn't part of that download, so it isn't in {{playlist}}.",
             "unknown": "{{title}} couldn't be added to {{playlist}}."
-        }
+        },
+        "create": "New playlist \"{{name}}\"",
+        "searchOrName": "Find or name a playlist"
     },
     "downloads": {
         "title": "Downloads",
