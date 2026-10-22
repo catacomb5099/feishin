@@ -5,7 +5,7 @@ import { generatePath, useNavigate } from 'react-router';
 
 import { ItemImage } from '/@/renderer/components/item-image/item-image';
 import { PageHeader } from '/@/renderer/components/page-header/page-header';
-import { toNvsId } from '/@/renderer/features/naviseerr/api/map';
+import { CURATED_PREFIX, toNvsId } from '/@/renderer/features/naviseerr/api/map';
 import { naviseerrQueries } from '/@/renderer/features/naviseerr/api/naviseerr-api';
 import { ActiveDownload } from '/@/renderer/features/naviseerr/api/types';
 import { openChooseFile } from '/@/renderer/features/naviseerr/components/choose-file-modal';
@@ -47,6 +47,11 @@ const pageOf = (download: ActiveDownload) => {
     }
     if (download.downloadType === 'PLAYLIST') {
         return generatePath(AppRoute.PLAYLISTS_DETAIL_SONGS, { playlistId: id });
+    }
+    if (download.downloadType === 'CURATED') {
+        return generatePath(AppRoute.PLAYLISTS_DETAIL_SONGS, {
+            playlistId: toNvsId(CURATED_PREFIX + download.youtubeId),
+        });
     }
     return null;
 };
@@ -97,7 +102,9 @@ const DownloadRow = ({ download }: { download: ActiveDownload }) => {
     const page = pageOf(download);
     const type = {
         ALBUM: tf('entity.album', { count: 1 }),
+        CURATED: tf('entity.playlist', { count: 1 }),
         PLAYLIST: tf('entity.playlist', { count: 1 }),
+        RADIO: tf('entity.playlist', { count: 1 }),
         SONG: tf('entity.song', { count: 1 }),
     }[download.downloadType];
     const meta = [type, download.artists.join(', '), formatDateRelative(download.requestedAt)]

@@ -90,7 +90,7 @@ export type DownloadStage =
     | 'STARTING'
     | 'SUCCEEDED';
 
-export type DownloadType = 'ALBUM' | 'PLAYLIST' | 'SONG';
+export type DownloadType = 'ALBUM' | 'CURATED' | 'PLAYLIST' | 'RADIO' | 'SONG';
 
 export type LibrarySongState = { downloadId?: string; state: 'IN_LIBRARY' | 'ON_ITS_WAY' };
 
@@ -185,6 +185,28 @@ export type Status = {
     };
     soulseek: { connected: boolean; loggedIn: boolean };
     youtubeMusic: { detail: null | string; reachable: boolean };
+};
+
+export type SuggestedPlaylist = {
+    category: string;
+    editionDate: string;
+    title: string;
+    trackCount: number;
+    year: null | string;
+};
+
+export type SuggestedPlaylistDetail = {
+    category: string;
+    title: string;
+    trackCount: number;
+    tracks: {
+        artists: string[];
+        iconURL: string;
+        id: string;
+        name: string;
+        position: number;
+        reason: null | string;
+    }[];
 };
 
 export const TERMINAL_STAGES: DownloadStage[] = ['SUCCEEDED', 'FAILED', 'PARTIAL_SUCCESS'];

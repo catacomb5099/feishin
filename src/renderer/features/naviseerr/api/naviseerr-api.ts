@@ -1,5 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
+import { curatedCategory } from '/@/renderer/features/naviseerr/api/map';
 import {
     NaviseerrError,
     nvsRequest,
@@ -16,6 +17,8 @@ import {
     NvsSearch,
     Session,
     Status,
+    SuggestedPlaylist,
+    SuggestedPlaylistDetail,
 } from '/@/renderer/features/naviseerr/api/types';
 
 // Keys start with 'naviseerr' and the address, never a Feishin serverId: it is another server.
@@ -67,8 +70,17 @@ export const naviseerrQueries = {
     collection: (address: null | string, id: string, type: 'ALBUM' | 'PLAYLIST') =>
         queryOptions({
             enabled: !!address,
-            queryFn: ({ signal }) =>
-                nvsRequest<NvsCollection>(`/collections/${segment(id)}?type=${type}`, { signal }),
+            queryFn: ({ signal }) => {
+                const category = curatedCategory(id);
+                return category
+                    ? nvsRequest<SuggestedPlaylistDetail>(
+                          `/suggested-playlists/${segment(category)}`,
+                          { signal },
+                      ).then((detail) => fromSuggested(id, detail))
+                    : nvsRequest<NvsCollection>(`/collections/${segment(id)}?type=${type}`, {
+                          signal,
+                      });
+            },
             queryKey: [...nvsKeys.root(address), 'collection', type, id],
             retry: false,
             staleTime: 5 * 60_000,
@@ -133,6 +145,18 @@ export const naviseerrQueries = {
             retry: false,
             staleTime: 60_000,
         }),
+    suggested: (address: null | string) =>
+        queryOptions({
+            enabled: !!address,
+            queryFn: ({ signal }) =>
+                nvsRequest<{ enabled: boolean; playlists: SuggestedPlaylist[] }>(
+                    '/suggested-playlists',
+                    { signal },
+                ),
+            queryKey: [...nvsKeys.root(address), 'suggested'],
+            retry: false,
+            staleTime: 60 * 60_000,
+        }),
 };
 
 /** 202 for a new download, 409 when it is already queued, running or in the library: both carry the download. */
@@ -149,5 +173,35 @@ const requestDownload = async (path: string): Promise<ActiveDownload> => {
 export const downloadSong = (youtubeId: string) =>
     requestDownload(`/download/song/${segment(youtubeId)}`);
 
-export const downloadCollection = (id: string, type: 'ALBUM' | 'PLAYLIST') =>
-    requestDownload(`/download/collection/${segment(id)}?type=${type}`);
+export const downloadCollection = (id: string, type: 'ALBUM' | 'PLAYLIST') => {
+    const category = curatedCategory(id);
+    return requestDownload(
+        category
+            ? `/download/collection/${segment(category)}?type=CURATED`
+            : `/download/collection/${segment(id)}?type=${type}`,
+    );
+};
+
+/** A suggested playlist in the shape of a YouTube playlist page. */
+const fromSuggested = (id: string, detail: SuggestedPlaylistDetail): NvsCollection => ({
+    artistIds: [],
+    artists: [],
+    iconURL: detail.tracks[0]?.iconURL ?? '',
+    id,
+    name: detail.title,
+    playlistId: null,
+    trackCount: detail.tracks.length,
+    tracks: detail.tracks.map((track) => ({
+        artistIds: [],
+        artists: track.artists,
+        durationSeconds: null,
+        iconURL: track.iconURL,
+        id: track.id,
+        name: track.name,
+        plays: null,
+        position: track.position,
+    })),
+    type: 'PLAYLIST',
+    views: null,
+    year: null,
+});

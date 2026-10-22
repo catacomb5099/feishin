@@ -21,6 +21,11 @@ import {
 export const NVS_PREFIX = 'nvs~';
 
 export const toNvsId = (youtubeId: string) => NVS_PREFIX + youtubeId;
+
+// A suggested playlist ("Made for you") is a playlist page too: nvs~c~<curator category>.
+export const CURATED_PREFIX = 'c~';
+export const curatedCategory = (id: string) =>
+    id.startsWith(CURATED_PREFIX) ? id.slice(CURATED_PREFIX.length) : null;
 export const isNvsId = (id?: null | string): id is string => !!id && id.startsWith(NVS_PREFIX);
 export const fromNvsId = (id: string) => (isNvsId(id) ? id.slice(NVS_PREFIX.length) : id);
 
