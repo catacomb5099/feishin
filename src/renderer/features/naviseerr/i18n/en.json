@@ -156,5 +156,20 @@
     "radio": {
         "start": "Go to song radio",
         "starting": "Starting a radio from {{title}}..."
+    },
+    "songInfo": {
+        "heading": "Song info",
+        "title": "Title",
+        "artists": "Artists",
+        "album": "Album",
+        "year": "Year",
+        "length": "Length",
+        "plays": "Plays",
+        "explicit": "Explicit",
+        "yes": "Yes"
+    },
+    "outage": {
+        "youtubeMusic": "The download server can't reach YouTube Music right now, so search and new downloads may fail.",
+        "soulseek": "The download server isn't connected to Soulseek right now, so downloads will wait."
     }
 }
